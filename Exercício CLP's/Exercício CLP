@@ -1,0 +1,93 @@
+import random
+
+# Dicionário com CLPs e sensores
+clps = {
+    "CLP1": {
+        "T1": "Temperatura",
+        "P1": "Pressão",
+        "F1": "Vazão"
+    },
+    "CLP2": {
+        "T2": "Temperatura",
+        "P2": "Pressão",
+        "F2": "Vazão"
+    },
+    "CLP3": {
+        "T3": "Temperatura",
+        "P3": "Pressão",
+        "F3": "Vazão"
+    }
+}
+
+# Funções para simular leituras dos sensores
+def lerSensorTemperatura(sensor):
+    valor = round(random.uniform(20.0, 120.0), 1)  # °C
+    return f"{sensor} - Temperatura: {valor} °C"
+
+def lerSensorPressao(sensor):
+    valor = round(random.uniform(1.0, 10.0), 2)  # bar
+    return f"{sensor} - Pressão: {valor} bar"
+
+def lerSensorVazao(sensor):
+    valor = round(random.uniform(5.0, 50.0), 2)  # L/min
+    return f"{sensor} - Vazão: {valor} L/min"
+
+# Função para validar entrada do CLP
+def validarCLP(clp_input):
+    if clp_input in clps:
+        return True
+    else:
+        print("❌ CLP inválido. Tente novamente.")
+        return False
+
+# Função para validar entrada do sensor
+def validarSensor(clp, sensor_input):
+    if sensor_input in clps[clp]:
+        return True
+    else:
+        print("❌ Sensor inválido para este CLP. Tente novamente.")
+        return False
+
+# Função principal
+def executarMonitoramento():
+    print("=== Sistema de Monitoramento Industrial ===")
+
+    while True:
+        try:
+            print("\nCLPs disponíveis:", ", ".join(clps.keys()))
+            clp_escolhido = input("Digite o nome do CLP (ou 'sair' para encerrar): ").strip()
+
+            if clp_escolhido.lower() == 'sair':
+                print("Encerrando o sistema.")
+                break
+
+            if not validarCLP(clp_escolhido):
+                continue
+
+            print(f"Sensores disponíveis no {clp_escolhido}:")
+            for sensor, tipo in clps[clp_escolhido].items():
+                print(f"- {sensor} ({tipo})")
+
+            sensor_escolhido = input("Digite o nome do sensor: ").strip()
+
+            if not validarSensor(clp_escolhido, sensor_escolhido):
+                continue
+
+            tipo_sensor = clps[clp_escolhido][sensor_escolhido]
+
+            # Chama a função correspondente ao tipo de sensor
+            if tipo_sensor == "Temperatura":
+                print(lerSensorTemperatura(sensor_escolhido))
+            elif tipo_sensor == "Pressão":
+                print(lerSensorPressao(sensor_escolhido))
+            elif tipo_sensor == "Vazão":
+                print(lerSensorVazao(sensor_escolhido))
+            else:
+                print("Tipo de sensor desconhecido.")
+
+        except Exception as e:
+            print(f"❗ Ocorreu um erro: {e}")
+
+# Executar o programa
+if __name__ == "__main__":
+    executarMonitoramento()
